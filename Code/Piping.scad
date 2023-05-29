@@ -1,8 +1,13 @@
-import(file = "Lists");
+include <Lists.scad>
 
-module pipePath(paths, cs) {
+module pipePath(paths, cs, kind) {
   s = 0;
   r = 1;
+
+  function findWidth(arrOrNumber) =
+      len(arrOrNumber) > 0 ? arrOrNumber[0] : arrOrNumber;
+  function findHeight(arrOrNumber) =
+      len(arrOrNumber) > 0 ? arrOrNumber[1] : arrOrNumber;
 
   function calculateRotationalPosition(i) = [
     paths[i][0],
@@ -19,18 +24,43 @@ module pipePath(paths, cs) {
     length = newDefs[i][0];
     union() {
       translate([ sumList(newDefs, 0, i)[1], 0, sumList(newDefs, 0, i)[2] ])
-          rotate([ 0, sumList(paths, 0, i + 1)[1], 0 ])
-              linear_extrude(height = length) circle(r = cs / 2);
+          rotate([
+            sumList(paths, 0, i + 1)[2], sumList(paths, 0, i + 1)[1],
+            sumList(paths, 0, i + 1)[3]
+          ]) linear_extrude(height = length) {
+        if (kind == "square") {
+          square(size = cs);
+        } else {
+          circle(r = findWidth(cs) / 2);
+        }
+      }
       if (i > 0) {
-        translate([ sumList(newDefs, 0, i)[1], 0, sumList(newDefs, 0, i)[2] ])
-            sphere(cs / 2);
+        if (kind == "square") {
+          h = findHeight(cs);
+          w = findWidth(cs);
+          deg = paths[i][1];
+          totalDeg = sumList(paths, 0, i)[1];
+          echo(deg);
+          triangle_points =
+              [ [ 0, 0 ], [ 0, w ], [ ((-w * sin(deg))), -(-w * cos(deg)) ] ];
+          // color("red")
+          translate([ sumList(newDefs, 0, i)[1], 0, sumList(newDefs, 0, i)[2] ])
+              rotate([ 180, 270, 90 ]) rotate([ 0, 0, totalDeg ])
+                  linear_extrude(height = findHeight(cs))
+                      polygon(points = triangle_points, convexivity = 1);
+        } else {
+          translate([ sumList(newDefs, 0, i)[1], 0, sumList(newDefs, 0, i)[2] ])
+              sphere(findWidth(cs) / 2);
+        }
       }
     }
   }
 }
+
 // e.g.
 // pipePath(
 //     [
-//       [ 50, 11 ], [ 50, 25 ], [ 50, 35 ], [ 100, 45 ], [ 100, 45 ], [ 200, -45 ]
+//       [ 50, 11 ], [ 50, 25 ], [ 50, 35 ], [ 100, 45 ], [ 100, 45 ], [ 200,
+//       -45 ]
 //     ],
 //     50);
