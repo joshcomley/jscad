@@ -9,3 +9,10 @@ module rightTriangle(side1, side2, corner_radius, triangle_height) {
     }
   }
 }
+
+module rounded_square(size, radius_corner) {
+  translate([ radius_corner, radius_corner, 0 ]) minkowski() {
+    square(size - 2 * radius_corner);
+    circle(radius_corner);
+  }
+}
