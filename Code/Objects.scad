@@ -1,5 +1,9 @@
-module counterSunkScrew(length = 30, width = 2.2, headWidth = 8.1,
-                        headHeight = 4.15, cutoutAboveHeight = 10) {
+module counterSunkScrew(
+    length = 30, width = 2.2, headWidth = 8.1, headHeight = 4.15,
+    cutoutAboveHeight = 10,
+    // this is how round the screw is. Lower this number to get faster
+    // renderings.
+    grani = 16) {
   cutoutAbove = headWidth + 2;
   union() {
     translate([ 0, 0, -cutoutAboveHeight ]) color("magenta") cylinder(
