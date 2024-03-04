@@ -99,3 +99,16 @@ module corner_cylinder(length, radius) {
         cube([ radius, radius, length + heightOffset ]);
   }
 }
+
+module hollow_square(size, wallThickness = wallThickness) {
+  difference() {
+    square(size);
+    translate([ wallThickness, wallThickness, 0 ]) //
+        square([
+          size[0] - (wallThickness * 2), size[1] - (wallThickness * 2)
+        ]);
+  }
+}
+module hollowSquare(size, wallThickness = wallThickness) {
+  hollow_square(size, wallThickness);
+}
