@@ -140,7 +140,7 @@ if (demo == "rods") { // basic threaded rods
 if (demo == "nutbolt") { // printable nut and bolt
     pitch=0;   // thread pitch (0=use ISO pitch based on diameter)
     angle=30;  // ISO thread angle (default 30)
-    dia=6;     // screw diameter
+    dia=12;     // screw diameter
     ht=10;     // screw length (vertical height)
     fn=64;     // number of faces
     fnstep=4;  // number of steps in pitch stack (fn/fnstep must be >= 16)
@@ -177,7 +177,17 @@ fn = number of faces, both for circumference as well as pitch cycle.
 fnstep = number of circle vertexes to skip on each layer
 taper_arc = portion of a cirle to taper the thread
 */
-module threaded_rod(thread_profile, thread_depth, length=6, dia=4, pitch=1, rshift=0, fn=32, fnstep=1, taper_arc=0) {
+module threaded_rod( //
+    thread_profile,  //
+    thread_depth,    //
+    length = 6,      //
+    dia = 4,         //
+    pitch = 1,       //
+    rshift = 0,      //
+    fn = 32,         //
+    fnstep = 1,      //
+    taper_arc = 0    //
+) {
     fnz = fn / fnstep;
     dz = (pitch==0 ? ISO_get_coarse_pitch(dia) : pitch) / fnz;
     ncircles = floor(length/dz+0.5);
